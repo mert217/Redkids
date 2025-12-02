@@ -5,16 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RED Kids Robotics | 42999-Z</title>
 <style>
+
+/* ------------------ LOADER ------------------ */
+#loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    color: white;
+    font-family: Arial;
+}
+
+#loader img {
+    width: 180px;
+    animation: slowspin 2s linear;
+}
+
+@keyframes slowspin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 22px;
+    margin-top: 22px;
+    opacity: 0.8;
+}
+
+/* Sayfa açılınca hızlanan spin */
+@keyframes fastspin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(720deg); }
+}
+
+/* ------------------ ARKA PLAN + TEMA ------------------ */
+
 body {
     margin: 0;
     font-family: "Segoe UI", Arial, sans-serif;
     color: white;
     overflow-x: hidden;
-    background: radial-gradient(circle at top left, #1a0000, #300000 70%, #5c0000 100%);
-    position: relative;
+    background: radial-gradient(circle at center, #1a0000, #2b0000 60%, #550000 100%);
 }
 
-/* Arka planda hareketli robot siluetleri */
+/* Arkadaki robot siluetleri */
 .robot-bg {
     position: fixed;
     top: 0; left: 0;
@@ -22,176 +61,158 @@ body {
     pointer-events: none;
     z-index: 0;
 }
-.robot-bg div {
+.robot-s {
     position: absolute;
-    width: 50px; height: 50px;
+    width: 45px;
+    height: 45px;
     background: url('robot.png') no-repeat center/contain;
-    opacity: 0.05;
-    animation: float 20s linear infinite;
-}
-@keyframes float {
-    0% { transform: translateY(0) translateX(0) rotate(0deg);}
-    50% { transform: translateY(-200px) translateX(100px) rotate(180deg);}
-    100% { transform: translateY(0) translateX(0) rotate(360deg);}
+    opacity: 0.06;
+    animation: floater linear infinite;
 }
 
-/* Header */
+@keyframes floater {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-180px) rotate(180deg) scale(1.1); }
+    100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* Neon border */
+.neon {
+    box-shadow:
+        0 0 8px rgba(255, 0, 0, 0.7),
+        0 0 16px rgba(255, 0, 0, 0.6),
+        inset 0 0 12px rgba(255, 0, 0, 0.4);
+}
+
+/* ------------------ HEADER ------------------ */
 header {
     text-align: center;
-    padding: 40px 20px;
-    border-bottom: 2px solid #ff2e2e;
-    background: rgba(0,0,0,0.35);
+    padding: 45px 20px;
+    background: rgba(0,0,0,0.4);
     backdrop-filter: blur(6px);
+    border-bottom: 3px solid #ff1b1b;
+    z-index: 3;
     position: relative;
-    z-index: 2;
 }
 header img {
     height: 150px;
-    filter: drop-shadow(0 0 18px rgba(255,0,0,0.7));
-    transition: transform 0.3s;
+    filter: drop-shadow(0 0 18px rgba(255,0,0,0.8));
+    transition: 0.3s;
 }
 header img:hover {
-    transform: rotate(-5deg) scale(1.05);
+    transform: scale(1.06) rotate(-4deg);
 }
 header h1 {
-    margin-top: 15px;
-    font-size: 40px;
     color: #ff2e2e;
+    font-size: 40px;
     letter-spacing: 2px;
-    text-shadow: 0 0 12px rgba(255,50,50,0.7);
+    text-shadow: 0 0 14px rgba(255,30,30,0.7);
 }
 header p {
     font-size: 20px;
     opacity: 0.85;
 }
 
-/* Container */
+/* ------------------ KARTLAR ------------------ */
+
 .container {
-    max-width: 1100px;
+    max-width: 1150px;
     margin: 40px auto;
     padding: 0 20px;
     position: relative;
-    z-index: 1;
 }
 
-/* Kartlar */
 .card {
-    background: rgba(20,0,0,0.7);
-    padding: 25px;
-    margin: 30px 0;
-    border-left: 5px solid #ff3333;
-    border-radius: 12px;
-    box-shadow: 0 0 18px rgba(255,0,0,0.25);
-    backdrop-filter: blur(5px);
-    transition: transform 0.4s, box-shadow 0.4s;
+    background: rgba(20,0,0,0.75);
+    padding: 28px;
+    margin: 35px 0;
+    border-left: 6px solid #ff2e2e;
+    border-radius: 14px;
+    backdrop-filter: blur(7px);
+    transition: 0.4s;
+    transform: translateY(60px);
     opacity: 0;
-    transform: translateY(50px);
 }
 .card.visible {
     opacity: 1;
     transform: translateY(0);
 }
 .card:hover {
-    transform: translateY(-5px) scale(1.03) rotate(-0.5deg);
-    box-shadow: 0 0 45px rgba(255,0,0,0.6);
+    transform: translateY(-6px) scale(1.035);
+    box-shadow: 0 0 40px rgba(255,0,0,0.8);
 }
 
-/* Başlık */
 h2 {
-    color: #ff4040;
-    margin-top: 0;
-    text-shadow: 0 0 10px rgba(255,50,50,0.7);
+    color: #ff4444;
+    text-shadow: 0 0 12px rgba(255,30,30,0.7);
 }
 
-/* Liste */
-ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 10px 0;
-}
+ul { list-style: none; padding: 0; }
 li {
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    border-left: 5px solid #ff5555;
+    margin: 14px 0;
+    padding: 10px 14px;
+    background: rgba(255,0,0,0.13);
+    border-left: 6px solid #ff6666;
     border-radius: 6px;
-    background: rgba(255,0,0,0.1);
     transition: 0.3s;
 }
 li:hover {
     background: rgba(255,0,0,0.25);
-    transform: scale(1.02);
-    box-shadow: 0 0 12px rgba(255,0,0,0.5);
+    transform: scale(1.03);
+    box-shadow: 0 0 14px rgba(255,0,0,0.55);
 }
 .role {
     font-weight: bold;
-    color: #ff9999;
+    color: #ff9e9e;
 }
 
-/* İletişim */
+/* ------------------ İLETİŞİM ------------------ */
+
 .contact-info {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 10px;
     flex-wrap: wrap;
+    gap: 14px;
 }
 .contact-info div {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,0,0,0.1);
-    padding: 6px 12px;
+    background: rgba(255,0,0,0.13);
+    padding: 8px 14px;
     border-radius: 6px;
-    transition: 0.3s;
     cursor: pointer;
 }
 .contact-info div:hover {
-    background: rgba(255,0,0,0.25);
-    box-shadow: 0 0 12px rgba(255,0,0,0.5);
+    background: rgba(255,0,0,0.22);
+    box-shadow: 0 0 14px rgba(255,0,0,0.6);
 }
-
-/* Sosyal ikonlar */
 .contact-info a {
-    color: #ff6666;
-    text-decoration: none;
+    color: #ff7b7b;
     font-weight: bold;
-}
-.contact-info a:hover {
-    text-decoration: underline;
-    text-shadow: 0 0 6px #ff6666;
+    text-decoration: none;
 }
 
 /* Footer */
 footer {
-    margin-top: 60px;
     text-align: center;
-    padding: 25px;
-    border-top: 2px solid #ff2e2e;
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(6px);
+    padding: 28px;
+    background: rgba(0,0,0,0.4);
+    border-top: 3px solid #ff1b1b;
+    margin-top: 60px;
     font-size: 14px;
-    box-shadow: 0 -2px 10px rgba(255,0,0,0.3);
 }
 
-@media (max-width: 600px) {
-    header h1 { font-size: 28px; }
-    header p { font-size: 16px; }
-    .contact-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
 </style>
 </head>
 <body>
 
-<div class="robot-bg">
-    <div style="top:10%; left:5%; animation-duration: 35s;"></div>
-    <div style="top:40%; left:25%; animation-duration: 50s;"></div>
-    <div style="top:70%; left:60%; animation-duration: 45s;"></div>
+<!-- ------------------ LOADER ------------------ -->
+<div id="loader">
+    <img id="loadlogo" src="logo.png" alt="">
+    <div class="loading-text">Sayfa Yükleniyor...</div>
 </div>
 
-<header>
+<!-- Robot background -->
+<div class="robot-bg" id="robots"></div>
+
+<header class="neon">
     <img src="logo.png" alt="Red Kids Logo">
     <h1>RED Kids Robotics Team</h1>
     <p>VEX IQ | Team 42999-Z</p>
@@ -202,11 +223,11 @@ footer {
     <div class="card">
         <h2>Takım Üyeleri</h2>
         <ul>
-            <li>Murat PARAKAZAN – <span class="role">Takım Koçu / Strateji</span></li>
-            <li>Ahmet Mert EVCİ – <span class="role">Sürücü ve Kodlamacı / Tasarımcı</span></li>
-            <li>Ali AKYOL – <span class="role">Sürücü / Strateji</span></li>
-            <li>Beren ERDAL – <span class="role">Takım Kaptanı ve sürücü / Yapı</span></li>
-            <li>Zümra Özüm YARDIMCI – <span class="role">Builder ve sürücü / Test</span></li>
+            <li>Murat PARAKAZAN – <span class="role">Takım Kaptanı / Strateji</span></li>
+            <li>Ahmet Mert EVCİ – <span class="role">Sürücü / Tasarımcı</span></li>
+            <li>Ali AKYOL – <span class="role">Kodlamacı / Strateji</span></li>
+            <li>Beren ERDAL – <span class="role">Mekanik / Yapı</span></li>
+            <li>Zümra Özüm YARDIMCI – <span class="role">Destek / Test</span></li>
         </ul>
     </div>
 
@@ -215,39 +236,66 @@ footer {
         <div class="contact-info">
             <div><strong>Telefon:</strong> 552 820 842</div>
             <div><strong>Instagram:</strong> <a href="#">@redkids</a></div>
-            <div><strong>Facebook:</strong> <a href="#">Red Kids Robotics</a></div>
+            <div><strong>Facebook:</strong> Red Kids Robotics</div>
         </div>
     </div>
 
     <div class="card">
         <h2>Eğitim ve Gelişim</h2>
         <ul>
-            <li>Yeni üyelere robotik eğitimi</li>
-            <li>Sensör çalışmaları ve test sürüşleri</li>
-            <li>Kodlama seansları ve projeler</li>
-            <li>Yarışmalara hazırlık ve simülasyon çalışmaları</li>
+            <li>Takım içi robotik atölyeleri</li>
+            <li>Gelişmiş sürüş ve sensör test oturumları</li>
+            <li>Strateji ve maç simülasyon çalışmaları</li>
+            <li>Robot tasarım ve montaj eğitimleri</li>
         </ul>
     </div>
 
 </div>
 
-<footer>
+<footer class="neon">
     © 2025 RED Kids Robotics Team | 42999-Z
 </footer>
 
 <script>
-// Scroll animasyonu
+
+// Kart animasyonu
 const cards = document.querySelectorAll('.card');
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.2 });
-cards.forEach(card => observer.observe(card));
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.25 });
+cards.forEach(c => obs.observe(c));
+
+// Robot arka planı
+const robotContainer = document.getElementById('robots');
+for(let i = 0; i < 22; i++){
+    let r = document.createElement('div');
+    r.className = 'robot-s';
+    r.style.left = Math.random()*100 + '%';
+    r.style.top = Math.random()*100 + '%';
+    r.style.animationDuration = (20 + Math.random()*40) + 's';
+    robotContainer.appendChild(r);
+}
+
+// Loader kontrolü
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    const logo = document.getElementById('loadlogo');
+
+    // Logo hızlı dönmeye geçsin
+    setTimeout(() => {
+        logo.style.animation = "fastspin 1s linear infinite";
+    }, 1200);
+
+    // 5 saniye sonra kaybolsun
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        loader.style.transition = '0.6s';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 600);
+    }, 5000);
+});
 </script>
 
 </body>
 </html>
-
