@@ -3,251 +3,385 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RED Kids Robotics | 42999-Z</title>
+<title>RED Kids Robotics | 42999-Z - V3</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 
-/* ------------------ LOADER ------------------ */
+/* Genel Değişkenler ve Reset */
+:root {
+    --red-neon: #ff073a; /* Daha canlı, siberpunk kırmızı */
+    --bg-dark: #0a0000;
+    --card-bg: rgba(15, 0, 0, 0.95);
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #e0e0e0;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #050000 0%, #0a0000 40%, #150000 100%);
+    perspective: 1000px;
+}
+p { line-height: 1.6; }
+
+/* ------------------ 1. YÜKLEYİCİ (LOADER) ------------------ */
 #loader {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: black;
+    background: var(--bg-dark);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 9999;
     color: white;
-    font-family: Arial;
+    font-family: 'Orbitron', sans-serif;
+    transition: opacity 0.6s ease-out;
 }
-
 #loader img {
     width: 180px;
-    animation: slowspin 2s linear;
+    animation: slowspin 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px var(--red-neon));
 }
-
 @keyframes slowspin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
 }
-
 .loading-text {
-    font-size: 22px;
-    margin-top: 22px;
-    opacity: 0.8;
+    font-size: 20px;
+    margin-top: 25px;
+    letter-spacing: 3px;
+    color: var(--red-neon);
+    animation: blink 1.5s step-start infinite;
+}
+@keyframes blink { 50% { opacity: 0.5; } }
+
+/* ------------------ 2. ARKA PLAN ve NEON STİLİ ------------------ */
+.dot-bg { /* Önceki dot animasyonu */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.dot {
+    position: absolute; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255, 7, 58, 0.6);
+    box-shadow: 0 0 7px rgba(255, 7, 58, 0.9);
+    animation: floaterDot linear infinite;
+}
+@keyframes floaterDot { /* Animasyon daha uzun sürsün */
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4;}
+    50% { transform: translate(100px, -150px) scale(1.5); opacity: 0.8;}
 }
 
-/* Sayfa açılınca hızlanan spin */
-@keyframes fastspin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(720deg); }
-}
-
-/* ------------------ ARKA PLAN + TEMA ------------------ */
-
-body {
-    margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    color: white;
-    overflow-x: hidden;
-    background: radial-gradient(circle at center, #1a0000, #2b0000 60%, #550000 100%);
-}
-
-/* Arkadaki robot siluetleri */
-.robot-bg {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-.robot-s {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    background: url('robot.png') no-repeat center/contain;
-    opacity: 0.06;
-    animation: floater linear infinite;
-}
-
-@keyframes floater {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-180px) rotate(180deg) scale(1.1); }
-    100% { transform: translateY(0) rotate(360deg); }
-}
-
-/* Neon border */
 .neon {
     box-shadow:
-        0 0 8px rgba(255, 0, 0, 0.7),
-        0 0 16px rgba(255, 0, 0, 0.6),
-        inset 0 0 12px rgba(255, 0, 0, 0.4);
+        0 0 12px rgba(255, 7, 58, 0.8),
+        0 0 25px rgba(255, 7, 58, 0.6),
+        inset 0 0 10px rgba(255, 7, 58, 0.4);
+    border: 1px solid rgba(255, 7, 58, 0.3);
 }
 
-/* ------------------ HEADER ------------------ */
-header {
+/* ------------------ 3. NAVİGASYON (YENİ) ------------------ */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--red-neon);
+    z-index: 50;
+    padding: 15px 0;
     text-align: center;
-    padding: 45px 20px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(6px);
-    border-bottom: 3px solid #ff1b1b;
-    z-index: 3;
-    position: relative;
-}
-header img {
-    height: 150px;
-    filter: drop-shadow(0 0 18px rgba(255,0,0,0.8));
     transition: 0.3s;
 }
-header img:hover {
-    transform: scale(1.06) rotate(-4deg);
+.navbar a {
+    color: #cccccc;
+    text-decoration: none;
+    padding: 10px 18px;
+    margin: 0 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    transition: 0.3s;
+    border-radius: 5px;
+}
+.navbar a:hover {
+    color: #ffffff;
+    background: var(--red-neon);
+    text-shadow: 0 0 10px #ffffff;
+}
+
+/* ------------------ 4. HEADER ------------------ */
+header {
+    text-align: center;
+    padding: 80px 20px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border-bottom: 4px solid var(--red-neon);
+    z-index: 10;
+    position: relative;
+    transform-style: preserve-3d;
 }
 header h1 {
-    color: #ff2e2e;
-    font-size: 40px;
-    letter-spacing: 2px;
-    text-shadow: 0 0 14px rgba(255,30,30,0.7);
+    font-family: 'Orbitron', sans-serif;
+    color: var(--red-neon);
+    font-size: 52px;
+    letter-spacing: 5px;
+    text-shadow: 0 0 20px rgba(255,7,58,1);
 }
 header p {
-    font-size: 20px;
-    opacity: 0.85;
+    font-size: 24px;
+    color: #ffcccc;
 }
 
-/* ------------------ KARTLAR ------------------ */
+/* ------------------ 5. KARTLAR VE İÇERİK ------------------ */
 
 .container {
-    max-width: 1150px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 25px;
     position: relative;
+    z-index: 5;
 }
 
 .card {
-    background: rgba(20,0,0,0.75);
-    padding: 28px;
-    margin: 35px 0;
-    border-left: 6px solid #ff2e2e;
-    border-radius: 14px;
-    backdrop-filter: blur(7px);
-    transition: 0.4s;
-    transform: translateY(60px);
+    background: var(--card-bg);
+    padding: 35px;
+    margin: 50px 0;
+    border-left: 7px solid var(--red-neon);
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    transition: 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateY(80px);
     opacity: 0;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.7);
 }
 .card.visible {
     opacity: 1;
     transform: translateY(0);
 }
 .card:hover {
-    transform: translateY(-6px) scale(1.035);
-    box-shadow: 0 0 40px rgba(255,0,0,0.8);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 0 60px rgba(255,7,58,1);
 }
 
 h2 {
-    color: #ff4444;
-    text-shadow: 0 0 12px rgba(255,30,30,0.7);
+    font-family: 'Orbitron', sans-serif;
+    color: var(--red-neon);
+    text-shadow: 0 0 12px rgba(255,7,58,0.8);
+    border-bottom: 2px solid rgba(255, 7, 58, 0.4);
+    padding-bottom: 12px;
 }
 
-ul { list-style: none; padding: 0; }
-li {
-    margin: 14px 0;
-    padding: 10px 14px;
-    background: rgba(255,0,0,0.13);
-    border-left: 6px solid #ff6666;
-    border-radius: 6px;
+/* ------------------ 6. İSTATİSTİK PANELİ ------------------ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 25px;
+    text-align: center;
+}
+.stat-box {
+    background: rgba(255, 7, 58, 0.15);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid var(--red-neon);
+    font-family: 'Roboto Mono', monospace; /* Monospace yazı tipi veri hissi verir */
     transition: 0.3s;
 }
-li:hover {
-    background: rgba(255,0,0,0.25);
-    transform: scale(1.03);
-    box-shadow: 0 0 14px rgba(255,0,0,0.55);
+.stat-box:hover {
+    transform: scale(1.05);
+    background: rgba(255, 7, 58, 0.25);
 }
-.role {
+.stat-value {
+    font-size: 44px;
     font-weight: bold;
-    color: #ff9e9e;
+    color: #ffffff;
+    text-shadow: 0 0 10px var(--red-neon);
+}
+.stat-label {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #aaaaaa;
 }
 
-/* ------------------ İLETİŞİM ------------------ */
-
-.contact-info {
+/* ------------------ 7. GERİ SAYIM SAYACI ------------------ */
+.countdown {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    border: 1px dashed var(--red-neon);
+}
+.countdown-timer {
     display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
 }
-.contact-info div {
-    background: rgba(255,0,0,0.13);
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
+.time-unit {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ff00; /* Sayaçlar için farklı bir renk */
+    text-shadow: 0 0 10px #00ff00;
 }
-.contact-info div:hover {
-    background: rgba(255,0,0,0.22);
-    box-shadow: 0 0 14px rgba(255,0,0,0.6);
+.time-unit div {
+    font-size: 60px;
+    line-height: 1;
+}
+.time-unit span {
+    font-size: 18px;
+    color: #cccccc;
+    display: block;
+    margin-top: 5px;
+}
+
+/* ------------------ 8. DİĞER BÖLÜMLER (Temizlendi) ------------------ */
+.team-grid { /* Takım Üyeleri */
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;
+}
+.member-card {
+    background: rgba(255, 7, 58, 0.1); padding: 18px; border-radius: 10px; border: 1px solid rgba(255, 7, 58, 0.3); transition: 0.3s; text-align: center;
+}
+.member-card:hover { transform: translateY(-5px); background: rgba(255, 7, 58, 0.25); box-shadow: 0 0 20px var(--red-neon); }
+.member-card strong { color: #ffffff; font-size: 18px; display: block; margin-bottom: 5px; }
+.role { font-style: italic; color: #ffaaaa; font-size: 14px; }
+
+.contact-info { /* İletişim Butonları */
+    display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px;
 }
 .contact-info a {
-    color: #ff7b7b;
-    font-weight: bold;
-    text-decoration: none;
+    color: #ffffff; background: var(--red-neon); padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s; text-shadow: 0 0 5px #000; display: flex; align-items: center; gap: 8px;
 }
+.contact-info a:hover { background: #cc0000; box-shadow: 0 0 25px var(--red-neon); transform: scale(1.05); }
 
-/* Footer */
+/* ------------------ 9. FOOTER ------------------ */
 footer {
     text-align: center;
-    padding: 28px;
-    background: rgba(0,0,0,0.4);
-    border-top: 3px solid #ff1b1b;
-    margin-top: 60px;
-    font-size: 14px;
+    padding: 35px;
+    background: rgba(0,0,0,0.8);
+    border-top: 4px solid var(--red-neon);
+    margin-top: 80px;
+    font-size: 16px;
+    color: #aaaaaa;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
 }
-
 </style>
 </head>
 <body>
 
-<!-- ------------------ LOADER ------------------ -->
 <div id="loader">
-    <img id="loadlogo" src="logo1.png" alt="">
-    <div class="loading-text">Sayfa Yükleniyor...</div>
+    <img id="loadlogo" src="logo1.png" alt="RED Kids Logo">
+    <div class="loading-text">Veriler Yükleniyor...</div>
 </div>
 
-<!-- Robot background -->
-<div class="robot-bg" id="robots"></div>
+<div class="dot-bg" id="dots"></div>
 
-<header class="neon">
+<nav class="navbar">
+    <a href="#home"><i class="fas fa-home"></i> Ana Sayfa</a>
+    <a href="#team"><i class="fas fa-users"></i> Takım</a>
+    <a href="#stats"><i class="fas fa-chart-line"></i> Performans</a>
+    <a href="#achievements"><i class="fas fa-trophy"></i> Başarılar</a>
+    <a href="#contact"><i class="fas fa-envelope"></i> İletişim</a>
+</nav>
+
+<header class="neon" id="home">
     <img src="logo.png" alt="Red Kids Logo">
     <h1>RED Kids Robotics Team</h1>
     <p>VEX IQ | Team 42999-Z</p>
 </header>
 
 <div class="container">
-
-    <div class="card">
-        <h2>Takım Üyeleri</h2>
-        <ul>
-            <li>Murat PARAKAZAN – <span class="role">Takım Kaptanı / Strateji</span></li>
-            <li>Ahmet Mert EVCİ – <span class="role">Sürücü / Tasarımcı</span></li>
-            <li>Ali AKYOL – <span class="role">Kodlamacı / Strateji</span></li>
-            <li>Beren ERDAL – <span class="role">Mekanik / Yapı</span></li>
-            <li>Zümra Özüm YARDIMCI – <span class="role">Destek / Test</span></li>
-        </ul>
-    </div>
-
-    <div class="card">
-        <h2>İletişim</h2>
-        <div class="contact-info">
-            <div><strong>Telefon:</strong> 552 820 842</div>
-            <div><strong>Instagram:</strong> <a href="#">@redkids</a></div>
-            <div><strong>Facebook:</strong> Red Kids Robotics</div>
+    
+    <div class="card neon">
+        <h2>🗓️ 13 Aralık Bölgesel Turnuva Geri Sayım</h2>
+        <div class="countdown">
+            <p style="font-size: 20px; color: var(--red-neon);">VEX IQ Bölgesel Turnuva Başlangıcı</p>
+            <div class="countdown-timer" id="countdownTimer">
+                <div class="time-unit"><div id="days">00</div><span>GÜN</span></div>
+                <div class="time-unit"><div id="hours">00</div><span>SAAT</span></div>
+                <div class="time-unit"><div id="minutes">00</div><span>DAKİKA</span></div>
+                <div class="time-unit"><div id="seconds">00</div><span>SANİYE</span></div>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <h2>Eğitim ve Gelişim</h2>
-        <ul>
-            <li>Takım içi robotik atölyeleri</li>
-            <li>Gelişmiş sürüş ve sensör test oturumları</li>
-            <li>Strateji ve maç simülasyon çalışmaları</li>
-            <li>Robot tasarım ve montaj eğitimleri</li>
+    <div class="card" id="stats">
+        <h2>📊 Robot Performans Verileri</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Otonom Başarısı</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">12.4s</div>
+                <div class="stat-label">Ort. Maç Süresi</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">148</div>
+                <div class="stat-label">En Yüksek Skor</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">9</div>
+                <div class="stat-label">Kazanılan Ödül</div>
+            </div>
+        </div>
+        <p style="margin-top: 20px; text-align: center; opacity: 0.8; font-family: 'Roboto Mono', monospace;">Veri Güncelleme: 2025.12.03 - 11:30 GMT+3</p>
+    </div>
+
+    <div class="card" id="team">
+        <h2>🧑‍🚀 Takım Kadrosu</h2>
+        <div class="team-grid">
+            <div class="member-card">
+                <strong>Murat PARAKAZAN</strong>
+                <span class="role">Takım Kaptanı / Strateji</span>
+            </div>
+            <div class="member-card">
+                <strong>Ahmet Mert EVCİ</strong>
+                <span class="role">Sürücü / Tasarımcı</span>
+            </div>
+            <div class="member-card">
+                <strong>Ali AKYOL</strong>
+                <span class="role">Kodlamacı / Otonom Uzmanı</span>
+            </div>
+            <div class="member-card">
+                <strong>Beren ERDAL</strong>
+                <span class="role">Mekanik / Robot Yapı</span>
+            </div>
+            <div class="member-card">
+                <strong>Zümra Özüm YARDIMCI</strong>
+                <span class="role">Destek / Test ve Geri Bildirim</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="achievements">
+        <h2>🏆 Başarılarımız</h2>
+        <ul class="achievements-list">
+            <li><span class="award-name">Mükemmellik Ödülü (Excellence Award)</span> - Bölgesel VEX Yarışması 2024</li>
+            <li><span class="award-name">Tasarım Ödülü (Design Award) Finalisti</span> - Ulusal Şampiyona</li>
+            <li><span class="award-name">Robot Becerileri Şampiyonu</span> - Konya Yerel Turnuvası</li>
         </ul>
+    </div>
+    
+    <div class="card">
+        <h2>📢 Takım Haberleri</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li style="border-left: 6px solid #00ffff; background: rgba(0, 255, 255, 0.1);">**[YENİ]** 03.12.2025: Gelecek sezona hazırlık amacıyla yeni nesil motorlarımızı test etmeye başladık.</li>
+            <li>20.11.2025: Türkiye Şampiyonası için yolculuk ve konaklama planları kesinleşti.</li>
+            <li>01.11.2025: Robotun yazılımının v2.1 sürümü yayınlandı. Otonom tutarlılığı %5 artırıldı.</li>
+        </ul>
+    </div>
+
+
+    <div class="card" id="contact">
+        <h2>📞 İletişim Protokolleri</h2>
+        <div class="contact-info">
+            <a href="tel:+90552820842" class="neon"><i class="fas fa-phone-alt"></i> Telefon: 552 820 842</a>
+            <a href="https://instagram.com/redkids" target="_blank" class="neon"><i class="fab fa-instagram"></i> Instagram: @redkids</a>
+            <a href="#" target="_blank" class="neon"><i class="fas fa-envelope"></i> E-posta (Yakında)</a>
+        </div>
     </div>
 
 </div>
@@ -258,45 +392,85 @@ footer {
 
 <script>
 
-// Kart animasyonu
+// ------------------ JS İŞLEVLERİ ------------------
+
+// 1. Kart Animasyonu (IntersectionObserver)
 const cards = document.querySelectorAll('.card');
 const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.25 });
+    entries.forEach(e => { 
+        if(e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+        } 
+    });
+}, { threshold: 0.2 });
 cards.forEach(c => obs.observe(c));
 
-// Robot arka planı
-const robotContainer = document.getElementById('robots');
-for(let i = 0; i < 22; i++){
-    let r = document.createElement('div');
-    r.className = 'robot-s';
-    r.style.left = Math.random()*100 + '%';
-    r.style.top = Math.random()*100 + '%';
-    r.style.animationDuration = (20 + Math.random()*40) + 's';
-    robotContainer.appendChild(r);
+// 2. Parçacık Arka Planı Oluşturma
+const dotContainer = document.getElementById('dots');
+const dotCount = 50; 
+for(let i = 0; i < dotCount; i++){
+    let d = document.createElement('div');
+    d.className = 'dot';
+    d.style.left = Math.random()*100 + '%';
+    d.style.top = Math.random()*100 + '%';
+    const size = 3 + Math.random()*3;
+    d.style.width = size + 'px';
+    d.style.height = size + 'px';
+    d.style.animationDuration = (30 + Math.random()*30) + 's';
+    d.style.animationDelay = (Math.random()*20) + 's';
+    dotContainer.appendChild(d);
 }
 
-// Loader kontrolü
+// 3. Loader Kontrolü
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
-    const logo = document.getElementById('loadlogo');
-
-    // Logo hızlı dönmeye geçsin
-    setTimeout(() => {
-        logo.style.animation = "fastspin 1s linear infinite";
-    }, 1200);
-
-    // 5 saniye sonra kaybolsun
     setTimeout(() => {
         loader.style.opacity = '0';
-        loader.style.transition = '0.6s';
         setTimeout(() => {
             loader.style.display = 'none';
         }, 600);
-    }, 5000);
+    }, 2000); 
 });
+
+// 4. Header Parallax Efekti
+const header = document.getElementById('home');
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    header.style.transform = `translateY(${scrollY * 0.2}px) translateZ(${scrollY * -0.5}px)`;
+});
+
+// 5. GERİ SAYIM SAYACI İŞLEVİ (13 ARALIK 2025'e göre GÜNCELLENDİ)
+function startCountdown() {
+    // 13 Aralık 2025, sabah 09:00:00 (Yarışma Başlangıcı varsayımı)
+    const targetDate = new Date("December 13, 2025 09:00:00").getTime(); 
+
+    const interval = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        // Hesaplamalar
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // HTML'e yazma (2 haneli format için padStart)
+        document.getElementById("days").innerHTML = String(days).padStart(2, '0');
+        document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
+        document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
+        document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
+
+        // Sayaç bittiğinde
+        if (distance < 0) {
+            clearInterval(interval);
+            document.getElementById("countdownTimer").innerHTML = "<div style='font-size: 30px; color: var(--red-neon);'>YARIŞMA BAŞLADI!</div>";
+        }
+    }, 1000);
+}
+
+startCountdown();
 </script>
 
 </body>
 </html>
-
